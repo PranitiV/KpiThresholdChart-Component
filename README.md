@@ -7,7 +7,6 @@ This is a [Next.js](https://nextjs.org) project that visualizes KPI data with in
 - [Getting Started](#getting-started)
 - [Features](#features)
 - [Usage](#usage)
-- [Adding OPENAI API key][#adding-OPENAI-API-key]
 
 ## Getting Started
 
