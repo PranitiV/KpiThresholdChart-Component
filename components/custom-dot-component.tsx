@@ -2,16 +2,17 @@
 
 import type { DotProps } from "recharts"
 
-interface CustomDotProps extends DotProps {
+interface CustomDotProps extends Omit<DotProps, "onDoubleClick"> {
   hasAnnotation?: boolean
-  onDoubleClick?: (month: string, value: number) => void
+  onDotDoubleClick?: (month: string, value: number) => void
   month?: string
+  payload?: any
 }
 
-export function CustomDotComponent({ cx, cy, hasAnnotation, onDoubleClick, month, payload }: CustomDotProps) {
+export function CustomDotComponent({ cx, cy, hasAnnotation, onDotDoubleClick, month, payload }: CustomDotProps) {
   const handleDoubleClick = () => {
-    if (onDoubleClick && month && payload) {
-      onDoubleClick(month, payload.value)
+    if (onDotDoubleClick && month && payload) {
+      onDotDoubleClick(month, payload.value)
     }
   }
 

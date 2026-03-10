@@ -230,7 +230,7 @@ export function KPIThresholdChart() {
                           key={key}
                           {...restProps}
                           hasAnnotation={hasAnnotation(props.payload?.month)}
-                          onDoubleClick={handleDoubleClickDot}
+                          onDotDoubleClick={handleDoubleClickDot}
                           month={props.payload?.month}
                         />
                       );
