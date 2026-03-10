@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState, useCallback, useRef, useEffect  } from "react"
+import { useState, useCallback, useRef } from "react"
 import { useQuery } from "@tanstack/react-query"
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer, ReferenceLine, Tooltip } from "recharts"
 import type { KPIData } from "@/lib/types"
@@ -17,7 +17,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Plus } from "lucide-react"
-import openai from "@/components/utils/openaiService"
 
 async function fetchKPIData(): Promise<{ data: KPIData[] }> {
   const response = await fetch("/api/kpis")
@@ -96,18 +95,29 @@ export function KPIThresholdChart() {
   }, [])
 
   const handleGenerateSummary = useCallback(async () => {
-    const prompt = `
-      You are a helpful assistant that generates a summary of the KPI data.
-      The data is as follows: ${JSON.stringify(data?.data)}
-      The annotations are as follows: ${JSON.stringify(annotations)}
-      The thresholds are as follows: ${JSON.stringify(thresholds)}
-      Analyse the data and provide a summary of how the company is performing.
-      `
-    const summary = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo",
-      messages: [{ role: "user", content: prompt }],
-    })
-    setSummary(summary?.choices[0].message.content || "")
+    try {
+      const response = await fetch("/api/summary", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          data: data?.data ?? [],
+          annotations,
+          thresholds,
+        }),
+      })
+
+      if (!response.ok) {
+        throw new Error("Failed to generate summary")
+      }
+
+      const json = await response.json()
+      setSummary(json.summary || "")
+    } catch (err) {
+      console.error(err)
+      setSummary("Unable to generate AI summary at this time.")
+    }
   }, [data, annotations, thresholds])
 
   if (isLoading) {
@@ -192,7 +202,7 @@ export function KPIThresholdChart() {
                         y={threshold.value}
                         stroke="transparent"
                         strokeWidth={30} // Further increase area for grabbing
-                        onMouseDown={(e) => handleMouseDown(threshold.id, e as any)}
+                        onMouseDown={(e: React.MouseEvent) => handleMouseDown(threshold.id, e)}
                         style={{ cursor: threshold.locked ? "default" : "ns-resize" }}
                       />
                       {/* Actual visible threshold line with label */}
