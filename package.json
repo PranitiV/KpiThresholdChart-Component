@@ -19,8 +19,8 @@
     "lucide-react": "^0.511.0",
     "next": "latest",
     "openai": "^4.103.0",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
+    "react": "latest",
+    "react-dom": "latest",
     "recharts": "^2.15.3",
     "tailwind-merge": "^3.3.0"
   },
