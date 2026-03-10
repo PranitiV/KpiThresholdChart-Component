@@ -6,7 +6,9 @@ interface CustomDotProps extends Omit<DotProps, "onDoubleClick"> {
   hasAnnotation?: boolean
   onDotDoubleClick?: (month: string, value: number) => void
   month?: string
-  payload?: any
+  payload?: {
+    value: number
+  }
 }
 
 export function CustomDotComponent({ cx, cy, hasAnnotation, onDotDoubleClick, month, payload }: CustomDotProps) {
